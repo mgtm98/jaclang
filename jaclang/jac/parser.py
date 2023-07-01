@@ -30,8 +30,6 @@ class JacParser(Transform, Parser, metaclass=ABCParserMeta):
     @_(
         "DOC_STRING",
         "DOC_STRING element_list",
-        # Workaround for fstrings, should make custom start rule
-        # "expression",
     )
     def module(self, p: YaccProduction) -> YaccProduction:
         """Start rule."""
@@ -202,7 +200,7 @@ class JacParser(Transform, Parser, metaclass=ABCParserMeta):
 
     @_(
         "empty",
-        "inherited_archs sub_name_dotted",
+        "inherited_archs COLON atom",
     )
     def inherited_archs(self, p: YaccProduction) -> YaccProduction:
         """Sub name list rule."""
@@ -210,11 +208,6 @@ class JacParser(Transform, Parser, metaclass=ABCParserMeta):
 
     @_("COLON NAME")
     def sub_name(self, p: YaccProduction) -> YaccProduction:
-        """Sub name rule."""
-        return p
-
-    @_("COLON dotted_name")
-    def sub_name_dotted(self, p: YaccProduction) -> YaccProduction:
         """Sub name rule."""
         return p
 
@@ -617,9 +610,9 @@ class JacParser(Transform, Parser, metaclass=ABCParserMeta):
 
     @_(
         "KW_VISIT expression SEMI",
-        "KW_VISIT sub_name_dotted expression SEMI",
+        "KW_VISIT sub_name expression SEMI",
         "KW_VISIT expression else_stmt",
-        "KW_VISIT sub_name_dotted expression else_stmt",
+        "KW_VISIT sub_name expression else_stmt",
     )
     def visit_stmt(self, p: YaccProduction) -> YaccProduction:
         """Visit statement rule."""
